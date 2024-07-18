@@ -127,30 +127,12 @@ function App() {
     }
   }
 
-  const [updateZIndex, setUpdateZIndex] = useState(false)
+  const [updateZIndex, _] = useState(false)
   const [key, setKey] = useState(0);
 
   const [description, setDescription] = useState('')
   const [dial, setDial] = useState(result[0])
   useEffect(() => {
-    const boxes = gsap.utils.toArray(`.box-${'path-1'}`);
-    const boxes2 = gsap.utils.toArray(`.box-${'path-2'}`);
-
-    const snapToIndex = (index: any) => {
-      const anglePerItem = 360 / boxes.length;
-      const targetRotation = index * anglePerItem;
-    
-      // Use gsap.to for the animation
-      gsap.to(`.container-${'path-1'}`, {
-        duration: 1,
-        rotation: targetRotation,
-        ease: "power1.inOut",
-        onComplete: () => {
-          // draggableRef.current[0].endRotation = targetRotation; // Update Draggable's end rotation
-        }
-      });
-    };
-    
   }, [])
 
   useEffect(() => {
@@ -160,7 +142,7 @@ function App() {
   const latestAlpha = useRef(0);
 
   useEffect(() => {
-    const handleOrientation = (event) => {
+    const handleOrientation = (event: any) => {
       latestAlpha.current = event.alpha; // Update the ref with the latest alpha value
     };
 
