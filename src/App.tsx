@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useOrientation, useGeolocation } from 'react-use';
 import './App.css';
 
 import { gsap } from 'gsap';
@@ -6,7 +7,6 @@ import { gsap } from 'gsap';
 import { InertiaPlugin } from './esm/InertiaPlugin';
 import { Draggable, MotionPathPlugin } from 'gsap/all';
 
-// Ensure GSAP plugins are registered
 gsap.registerPlugin(Draggable, InertiaPlugin, MotionPathPlugin);
 
 function removeSingleQuotes(str: any) {
@@ -125,62 +125,25 @@ function App() {
 
   const [description, setDescription] = useState('');
   const [dial, setDial] = useState(result[0]);
-  const latestAlpha = useRef(0);
-  const latestCoords = useRef({ latitude: 0, longitude: 0 });
+  const [angle_, setAngle] = useState<any>(null);
+  const orientation = useOrientation();
+  const geolocation = useGeolocation();
 
   useEffect(() => {
-    const handleOrientation = (event: any) => {
-      latestAlpha.current = event.alpha; // Update the ref with the latest alpha value
-    };
-
-    window.addEventListener("deviceorientation", handleOrientation);
-
-    return () => {
-      window.removeEventListener("deviceorientation", handleOrientation);
-    };
-  }, []);
-
-  useEffect(() => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const { latitude, longitude } = position.coords;
-        latestCoords.current = { latitude, longitude };
-        console.log("Latitude: ", latitude);
-        console.log("Longitude: ", longitude);
-      });
-    } else {
-      console.log("Geolocation is not available");
-    }
-  }, []);
-
-  useEffect(() => {
-    const calculateBearing = (startLat: number, startLng: number, endLat: number, endLng: number) => {
-      const toRadians = (deg: number) => deg * (Math.PI / 180);
-      const toDegrees = (rad: number) => rad * (180 / Math.PI);
-
-      const dLon = toRadians(endLng - startLng);
-      const y = Math.sin(dLon) * Math.cos(toRadians(endLat));
-      const x = Math.cos(toRadians(startLat)) * Math.sin(toRadians(endLat)) - 
-                Math.sin(toRadians(startLat)) * Math.cos(toRadians(endLat)) * Math.cos(dLon);
-
-      return (toDegrees(Math.atan2(y, x)) + 360) % 360;
-    };
-
     const updateCompass = () => {
-      const alpha = latestAlpha.current;
-      const { latitude, longitude } = latestCoords.current;
+      const { angle } = orientation
+      setAngle(angle)
+      if (angle !== undefined) {
+        const direction = Math.round(angle / 360 * dial.length) % dial.length;
+        setDescription(dial[direction]);
 
-      const northDirection = calculateBearing(latitude, longitude, latitude + 0.1, longitude);
-      const direction = Math.round((alpha + northDirection) / 360 * dial.length) % dial.length;
-
-      setDescription(dial[direction]);
-
-      // Rotate the dial to point the first element to the calculated direction
-      const rotatedDial = [...dial.slice(direction), ...dial.slice(0, direction)];
-      setDial(rotatedDial);
-      console.log(rotatedDial);
-      console.log("Updated Direction: ", dial[direction]);
-      setKey(prevKey => prevKey + 1);
+        // Rotate the dial to point the first element to the calculated direction
+        const rotatedDial = [...dial.slice(direction), ...dial.slice(0, direction)];
+        setDial(rotatedDial);
+        console.log(rotatedDial);
+        console.log("Updated Direction: ", dial[direction]);
+        setKey(prevKey => prevKey + 1);
+      }
     };
 
     const interval = setInterval(updateCompass, 3000);
@@ -188,11 +151,12 @@ function App() {
     return () => {
       clearInterval(interval);
     };
-  }, [dial]);
+  }, [orientation.angle, dial]);
 
   return (
     <>
       <DialComponent key={key} updateZIndex={updateZIndex} description={description} setDescription={setDescription} dialID={1} slots={dial} dialName={"path-1"} />
+      {angle_}
     </>
   );
 }
