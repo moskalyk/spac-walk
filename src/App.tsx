@@ -167,7 +167,7 @@ function App() {
         const bearing = calculateBearing(startPosition.latitude, startPosition.longitude, endPosition.latitude, endPosition.longitude);
         const direction = Math.round(bearing / 360 * dial.length) % dial.length;
         setDescription(dial[direction]);
-        setCompassDirection(direction)
+        setCompassDirection(direction + " " + startPosition.latitude + " " + startPosition.longitude + " " +endPosition.latitude + " " +endPosition.longitude)
 
         // Rotate the dial to point the first element to the calculated direction
         const rotatedDial = [...dial.slice(direction), ...dial.slice(0, direction)];
