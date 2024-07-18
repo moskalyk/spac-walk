@@ -157,7 +157,7 @@ function App() {
     const bearing = Math.atan2(y, x) * (180 / Math.PI);
     return (bearing + 360) % 360;
   };
-  const [compass_direction, setCompassDirection] = useState(null)
+  const [compass_direction, setCompassDirection] = useState<any>(null)
 
   useEffect(() => {
     const updateCompass = () => {
