@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useOrientation, useGeolocation } from 'react-use';
+import { useOrientation } from 'react-use';
 import './App.css';
 
 import { gsap } from 'gsap';
@@ -127,7 +127,7 @@ function App() {
   const [dial, setDial] = useState(result[0]);
   const [angle_, setAngle] = useState<any>(null);
   const orientation = useOrientation();
-  const geolocation = useGeolocation();
+  // const geolocation = useGeolocation();
 
   useEffect(() => {
     const updateCompass = () => {
