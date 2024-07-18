@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import { useOrientation } from 'react-use';
 import './App.css';
 
 import { gsap } from 'gsap';
@@ -20,12 +19,11 @@ const DialComponent = (props: any) => {
 
   useEffect(() => {
     if (props.slots) {
-      console.log(props.slots);
       const arr = Array.from(props.slots).reverse();
       let lastElement = arr.pop(); // Removes the last element and returns it
       arr.unshift(lastElement);
 
-      if (props.dialID == 1) setDial(arr.map((el) => removeSingleQuotes(el)));
+      if (props.dialID === 1) setDial(arr.map((el) => removeSingleQuotes(el)));
       else setDial(arr);
       props.setDescription(String(removeSingleQuotes(arr[0])));
     }
@@ -63,7 +61,7 @@ const DialComponent = (props: any) => {
     let index = Math.round(snappedValue / (360 / numberOfBoxes));
     index = ((index % dial.length) + dial.length) % dial.length;
 
-    if (props.dialID == 1) {
+    if (props.dialID === 1) {
       props.setDescription(removeSingleQuotes(props.slots[String((index))]));
     } else {
       props.setDescription(props.slots[String((index))]);
@@ -72,7 +70,7 @@ const DialComponent = (props: any) => {
     return snappedValue;
   };
 
-  useEffect(() => {}, [props.updateZIndex]);
+  useEffect(() => { }, [props.updateZIndex]);
 
   return (
     <div className="wrapper" style={{ zIndex: props.updateZIndex ? '-1' : '1' }}>
@@ -125,17 +123,51 @@ function App() {
 
   const [description, setDescription] = useState('');
   const [dial, setDial] = useState(result[0]);
-  const [angle_, setAngle] = useState<any>(null);
-  const orientation = useOrientation();
-  // const geolocation = useGeolocation();
+  const [positionQueue, setPositionQueue] = useState<{ latitude: number, longitude: number }[]>([]);
+
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      const watchId = navigator.geolocation.watchPosition((position) => {
+        const { latitude, longitude } = position.coords;
+        setPositionQueue((prevQueue) => {
+          const newQueue = [...prevQueue, { latitude, longitude }];
+          return newQueue.length > 10 ? newQueue.slice(1) : newQueue; // Keep the queue to the last 10 positions
+        });
+      });
+
+      return () => {
+        navigator.geolocation.clearWatch(watchId);
+      };
+    } else {
+      console.log("Geolocation is not available");
+    }
+  }, []);
+
+  const calculateBearing = (startLat: number, startLng: number, endLat: number, endLng: number) => {
+    const startLatRad = (startLat * Math.PI) / 180;
+    const startLngRad = (startLng * Math.PI) / 180;
+    const endLatRad = (endLat * Math.PI) / 180;
+    const endLngRad = (endLng * Math.PI) / 180;
+
+    const dLng = endLngRad - startLngRad;
+
+    const y = Math.sin(dLng) * Math.cos(endLatRad);
+    const x = Math.cos(startLatRad) * Math.sin(endLatRad) - Math.sin(startLatRad) * Math.cos(endLatRad) * Math.cos(dLng);
+
+    const bearing = Math.atan2(y, x) * (180 / Math.PI);
+    return (bearing + 360) % 360;
+  };
+  const [compass_direction, setCompassDirection] = useState(null)
 
   useEffect(() => {
     const updateCompass = () => {
-      const { angle } = orientation
-      setAngle(angle)
-      if (angle !== undefined) {
-        const direction = Math.round(angle / 360 * dial.length) % dial.length;
+      if (positionQueue.length >= 2) {
+        const startPosition = positionQueue[0];
+        const endPosition = positionQueue[positionQueue.length - 1];
+        const bearing = calculateBearing(startPosition.latitude, startPosition.longitude, endPosition.latitude, endPosition.longitude);
+        const direction = Math.round(bearing / 360 * dial.length) % dial.length;
         setDescription(dial[direction]);
+        setCompassDirection(direction)
 
         // Rotate the dial to point the first element to the calculated direction
         const rotatedDial = [...dial.slice(direction), ...dial.slice(0, direction)];
@@ -151,12 +183,12 @@ function App() {
     return () => {
       clearInterval(interval);
     };
-  }, [orientation.angle, dial]);
+  }, [positionQueue, dial]);
 
   return (
     <>
       <DialComponent key={key} updateZIndex={updateZIndex} description={description} setDescription={setDescription} dialID={1} slots={dial} dialName={"path-1"} />
-      {angle_}
+      {compass_direction}
     </>
   );
 }
