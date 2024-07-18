@@ -1,0 +1,658 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.hover-text {
+  position: relative;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.hover-text::after {
+  content: attr(data-hover);
+  position: absolute;
+  left: 50%;
+  bottom: 100%; /* Position the text above the element */
+  transform: translateX(-50%);
+  white-space: nowrap;
+  background: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  pointer-events: none;
+}
+
+.hover-text:hover::after {
+  opacity: 1;
+}
+
+@font-face {
+  font-family: 'Gothic';
+  src: local('Gothic'), url(./dr_po_gothicru_regular.ttf) format('truetype');
+}
+
+
+/* Hide the component on smaller screens */
+@media only screen and (max-width: 500px) {
+  .hide-on-mobile {
+      display: none;
+  }
+}
+
+/* Initially hide the message and show it only on smaller screens */
+.message-mobile {
+  display: none;
+}
+
+@media only screen and (max-width: 500px) {
+  .message-mobile {
+      display: block;
+  }
+}
+
+
+
+@import "normalize.css" layer(https://unpkg.com/normalize.css);
+
+@font-face {
+  font-family: "Geist Sans";
+  src: url("https://assets.codepen.io/605876/GeistVF.ttf") format("truetype");
+}
+
+:root {
+  --left: 'starting';
+  --right: 'ending';
+
+}
+*,
+*:after,
+*:before {
+  box-sizing: border-box;
+}
+
+
+.span {
+  top: 65px;
+  padding: 100px;
+  text-align: center;
+}
+
+.hover-text {
+  position: relative;
+}
+
+.hover-text::after {
+  font-size: 2rem;
+  content: attr(data-hover);
+  background-color: #000; /* Adjust background color */
+  color: #fff; /* Adjust text color */
+  white-space: nowrap; /* Prevent line breaks */
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+  pointer-events: none; /* Prevent mouse interaction */
+}
+
+.hover-text:hover::after {
+  opacity: 1;
+}
+
+body {
+  
+  /* background-color: black; */
+  background-color: lightgrey;
+
+  /* display: flex; */
+  /* place-items: center; */
+  /* font-family:  "Geist Sans", "SF Pro Text", "SF Pro Icons", "AOS Icons", "Helvetica Neue", Helvetica, Arial, sans-serif, system-ui; */
+}
+
+body::before {
+  /* --line: rgb(235, 203, 234); */
+  --line: #bae2d9;
+  content: "";
+  background:
+    linear-gradient(90deg, var(--line) 1px, transparent 1px 10vmin) 0 -5vmin / 10vmin 10vmin,
+    linear-gradient(var(--line) 1px, transparent 1px 10vmin) 0 -5vmin / 10vmin 10vmin;
+  mask: linear-gradient(-15deg, transparent 30%, white);
+  top: 0;
+  z-index: -1;
+}
+
+@layer foundation {
+  .control {
+    position: relative;
+    display: grid;
+    place-items: center;
+    margin: 0 auto;
+  }
+
+  .sr-only {
+  	position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border-width: 0;
+  }
+
+  .control:focus-within,
+  .control:hover {
+    --active: 1;
+  }
+
+  [type="range"] {
+    width: 300px;
+    opacity: 0;
+    height: 60px;
+  }
+
+  [type="range"]:hover {
+    cursor: -webkit-grab;
+  }
+  [type="range"]:active {
+    cursor: -webkit-grabbing;
+  }
+
+  [type=range]:focus-visible {
+    outline-offset: 0.25rem;
+    outline-color: transparent;
+  }
+
+  @property --shift {
+  	initial-value: 0;
+  	inherits: true;
+  	syntax: '<integer>';
+  }
+
+  .tooltip {
+    font-size: 1rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    pointer-events: none;
+    transform: translateY(calc(var(--shift, 0) * 50%));
+    transition: transform var(--speed) var(--timing);
+    z-index: 2;
+  }
+  @keyframes shift {
+  	0%, 31%, 61%, 100% { --shift: 0; }
+  	32%, 60% { --shift: 1; }
+  }
+
+  .tooltip::after,
+  .tooltip::before {
+    font-variant: tabular-nums;
+    position: absolute;
+    top: 50%;
+    translate: 0 -50%;
+    font-weight: bold;
+    color: white;
+    font-weight: 40;
+    font-family: monospace;
+  }
+
+  [type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    -webkitappearance: none;
+    height: 120px;
+    width: 40px;
+    margin-top: 0px;
+	  opacity: 1;
+	}
+	[type="range"]::-webkit-slider-runnable-track {
+  	-webkit-appearance: none;
+	  height: 120px;
+	  background: hsl(10 80% 50% / 0.5);
+	  margin-top: -60px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+	  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; 
+	}
+	[type=range]::-moz-range-track {
+	  height: 120px;
+	  background: hsl(10 80% 50% / 0.5);
+	  margin-top: -60px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+	  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; 
+	}
+}
+
+
+@layer scrolls {
+  @property --value {
+    initial-value: 0;
+    syntax: '<integer>';
+    inherits: true;
+  }
+
+  @keyframes sync {
+    to { --value: 100; }
+  }
+
+  [type=range] {
+    overflow: hidden;
+    opacity: 0;
+    touch-action: none;
+  }
+
+  .control {
+    animation: sync both linear reverse, shift both linear;
+    animation-timeline: --thumb;
+    animation-range: contain;
+  }
+
+  .control__track {
+  	--coffee: hsl(240 74% calc(24% + (30% * ((100 - var(--value, 0)) / 100)) / 1) / 0.4);
+  	--milk: hsl(0 100% 50% / calc(0.1 + (0.4 * ((100 - var(--value, 0)) / 100))));
+  	height: calc(50% + (var(--shift) * 50%));
+  	width: 100%;
+  	position: absolute;
+  	bottom: 0;
+  	pointer-events: none;
+  	transition: height var(--speed) var(--timing);
+  }
+
+  .control__track::before {
+  	content: "";
+  	position: absolute;
+  	top: 0;
+  	bottom: 0;
+  	left: 0;
+  	width: calc(var(--value, 0) * 1% - 0.5rem);
+  	background: var(--coffee);
+  	border-radius: 4px;
+  	transition: width var(--update);
+  }
+  .control__track::after {
+  	content: "";
+  	position: absolute;
+  	top: 0;
+  	bottom: 0;
+  	right: 0;
+  	width: calc((100 - var(--value, 0)) * 1% - 0.5rem);
+  	background: var(--milk);
+  	border-radius: 4px;
+  	transition: width var(--update);
+  }
+  .control__indicator {
+  	height: 75%;
+  	border-radius: 4px;
+  	width: 4px;
+  	position: absolute;
+  	top: 50%;
+  	background: hsl(0 0% 100% / calc((var(--active, 0) * 0.5) + 0.5));
+  	left:calc(var(--value, 0) * 1%);
+  	z-index: 2;
+  	translate: -50% -50%;
+  	transition: left var(--update);
+  }
+
+  :root {
+    --speed: 0.65s;
+    --update: 0s;
+    --timing: linear(
+	    0, 0.5007 7.21%, 0.7803 12.29%,
+	    0.8883 14.93%, 0.9724 17.63%,
+	    1.0343 20.44%, 1.0754 23.44%,
+	    1.0898 25.22%, 1.0984 27.11%,
+	    1.1014 29.15%, 1.0989 31.4%,
+	    1.0854 35.23%, 1.0196 48.86%,
+	    1.0043 54.06%, 0.9956 59.6%,
+	    0.9925 68.11%, 1
+	  );
+    timeline-scope: --thumb;
+  }
+
+  @supports(animation-timeline: scroll()) {
+	  :root {
+	    --speed: 0.65s;
+	    --update: 0.1s;
+	    --timing: linear(
+		    0, 0.5007 7.21%, 0.7803 12.29%,
+		    0.8883 14.93%, 0.9724 17.63%,
+		    1.0343 20.44%, 1.0754 23.44%,
+		    1.0898 25.22%, 1.0984 27.11%,
+		    1.1014 29.15%, 1.0989 31.4%,
+		    1.0854 35.23%, 1.0196 48.86%,
+		    1.0043 54.06%, 0.9956 59.6%,
+		    0.9925 68.11%, 1
+		  );
+	    timeline-scope: --thumb;
+	  }
+
+	  [type="range"]::-webkit-slider-thumb {
+	    view-timeline-name: --thumb;
+	    view-timeline-axis: inline;
+	  }
+  }
+
+}
+
+
+@layer tip {
+  
+  .tooltip {
+    counter-reset: low var(--value) high calc(100 - var(--value));
+  }
+  
+  .tooltip::before {
+  	--range: calc((70 - (var(--value) / 100 * 10)) * 1%);
+  	color: hsl(0 0 0);
+    content: var(--left) counter(low) "%";
+    mask: linear-gradient(90deg, hsl(0 0% 100% / 0.6) var(--range), hsl(0 0% 100% / 1) var(--range));
+    left: 0.5rem;
+
+  }
+  .tooltip::after {
+    --range: calc((50 - (var(--value) / 100 * 10)) * 1%);
+    content: counter(high) "%" var(--right);
+    mask: linear-gradient(90deg, hsl(0 0% 100% / 1) var(--range), hsl(0 0% 100% / 0.5) var(--range));
+    right: 0.5rem;
+  }
+
+}
+
+#tool-tip::before {
+  content: var(--tooltip-before-content, "default before content");
+}
+
+#tool-tip::after {
+  content: var(--tooltip-after-content, "default after content");
+}
+
+/* Socials stuff */
+.x-link, .bear-link {
+	color: hsl(0 0% 100%);
+	position: fixed;
+	bottom: 1rem;
+	left: 1rem;
+	width: 48px;
+	aspect-ratio: 1;
+	display: grid;
+	place-items: center;
+	opacity: 0.8;
+}
+
+.bear-link {
+	bottom: unset;
+	top: 1rem;
+}
+
+:where(.x-link, .bear-link):is(:hover, :focus-visible) {
+	opacity: 1;
+}
+.bear-link svg {
+	width: 75%;
+}
+.x-link svg {
+	width: 50%;
+}
+
+/* Center the main app container */
+body {
+  /* background-color: lightgrey; */
+}
+
+/* Adjustments to the slider to prevent offset issues */
+[type="range"] {
+  -webkit-appearance: none; /* Override default appearance */
+  width: 100%; /* Use 100% to fill the container */
+  background: transparent; /* Remove default background */
+}
+
+[type="range"]:focus {
+  outline: none; /* Remove focus outline */
+}
+
+/* Style the slider thumb */
+[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px; /* Adjust width */
+  height: 20px; /* Adjust height */
+  background: #333; /* Thumb color */
+  cursor: pointer; /* Cursor appearance */
+}
+
+/* Style the slider track */
+[type="range"]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 8px;
+  background: #ccc;
+  border: none;
+  border-radius: 3px;
+}
+
+.write-button {
+  display: flex;
+  justify-content: center;
+  margin: auto;
+}
+
+table {
+  font-size: 8px;
+  text-align: center;
+}
+.circleContainer {
+  position: relative;
+  width: 400px; /* Or your desired size */
+  height: 400px; /* Equal to width for a perfect circle */
+  border-radius: 50%;
+  overflow: hidden; /* Ensure contents don't spill out of the circle */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer; /* Optional: Changes the cursor to indicate it's clickable */
+}
+
+.circleContainer img {
+  width: 100%; /* Make the image cover the container */
+  height: 100%; /* Same as width to maintain aspect ratio */
+  object-fit: cover; /* Ensures the image covers the space without distortion */
+}
+
+.circleText {
+  position: absolute;
+  top: 15%; /* Adjust as needed to move text to the top third */
+  width: 100%;
+  text-align: center;
+  color: #e9dded; /* Choose a color that contrasts your image */
+  font-size: 16px; /* Adjust as needed */
+  z-index: 2; /* Ensure the text is above the image */
+}
+
+
+body {
+  /* display: flex; */
+  background: lightgrey;
+}
+
+canvas {
+  margin-left: -227px;
+  position: absolute;
+  margin-top: -180px; /* Adds space between the canvases if needed */
+}
+
+.app-container {
+  position: fixed;
+  top: 100px;
+  left: 37%;
+  transform: 'translate(-50%, -50%)';
+  height: 100vh;
+  overflow: scroll;
+  padding-bottom: 50px;
+}
+
+.app-container::-webkit-scrollbar {
+  display: none;  /* Safari and Chrome */
+}
+
+span {
+  /* text-align: center; */
+}
+
+.table-container {
+  max-height: 90vh; /* 90% of the viewport height */
+  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-x: auto; /* Enable horizontal scrolling if needed */
+  /* border: 1px solid #ccc; Optional, adds a border around the table */
+}
+
+.table-container::-webkit-scrollbar {
+  display: none;  /* Safari and Chrome */
+}
+
+table {
+  width: 100%; /* Optional, ensures the table fills the container */
+  border-collapse: collapse; /* Optional, for styling */
+}
+
+th, td {
+  /* border: 1px solid #ccc; Optional, adds borders to cells */
+  padding: 8px; /* Optional, adds padding to cells */
+  text-align: left; /* Optional, aligns text to the left */
+}
+
+iframe {
+  border: 0px;
+  /* margin: auto; */
+  /* position: absolute; */
+  margin: 0 10px;
+    /* top: 50%; */
+    /* left: 50%; */
+    /* transform: translate(-50%, -50%); */
+}
+
+.iframe-container {
+  margin-left: 30px;
+  display: flex;            /* Enables flexbox */
+  justify-content: center;  /* Centers the iframes horizontally */
+  align-items: center;      /* Centers the iframes vertically (optional) */
+}
+
+.wrapper {
+  scale: .7;
+  width: 380px;
+  height: 380px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.container {
+  margin-left: -20px;
+  width: 380px;
+  height: 380px;
+  transform: scale(1);
+  padding: 29px;
+}
+
+.box {
+  border-radius: 20px;
+  background-color: darkgrey;
+  width: 35px;
+  height: 35px;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #333;
+}
+
+#description {
+  position: absolute;
+  position: absolute;
+  color: #B1FFED;
+  font-size: 60px;
+  margin-left: -10px;
+  margin-top: 20px;
+}
+
+.react-datetime-picker__calendar {
+  z-index: 2;
+}
