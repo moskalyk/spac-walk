@@ -127,6 +127,8 @@ function App() {
 
   useEffect(() => {
     if ("geolocation" in navigator) {
+      setInterval(() => {
+
       navigator.geolocation.getCurrentPosition((position) => {
         const { latitude, longitude } = position.coords;
         setPositionQueue((prevQueue) => {
@@ -141,6 +143,8 @@ function App() {
         enableHighAccuracy: true
       }
     );
+  }, 3000)
+
 
       // return () => {
         // navigator.geolocation.clearWatch(watchId);
