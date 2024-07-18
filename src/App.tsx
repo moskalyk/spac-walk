@@ -127,17 +127,24 @@ function App() {
 
   useEffect(() => {
     if ("geolocation" in navigator) {
-      const watchId = navigator.geolocation.watchPosition((position) => {
+      navigator.geolocation.getCurrentPosition((position) => {
         const { latitude, longitude } = position.coords;
         setPositionQueue((prevQueue) => {
           const newQueue = [...prevQueue, { latitude, longitude }];
           return newQueue.length > 10 ? newQueue.slice(1) : newQueue; // Keep the queue to the last 10 positions
         });
-      });
+      },
+      (error) => {
+        console.error("Error obtaining location", error);
+      },
+      {
+        enableHighAccuracy: true
+      }
+    );
 
-      return () => {
-        navigator.geolocation.clearWatch(watchId);
-      };
+      // return () => {
+        // navigator.geolocation.clearWatch(watchId);
+      // };
     } else {
       console.log("Geolocation is not available");
     }
